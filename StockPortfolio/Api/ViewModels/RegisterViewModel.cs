@@ -2,7 +2,7 @@
 
 namespace StockPortfolio.Api.Models
 {
-    public class RegisterModel
+    public class RegisterViewModel
     {
         [Required(ErrorMessage = "User Name is required.")]
         public string Username { get; set; }

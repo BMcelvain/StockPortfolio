@@ -23,6 +23,11 @@ namespace StockPortfolio.Api
             return View();
         }
 
+        public IActionResult Login()
+        {
+            return View("Login");
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.V4.Pages.Account.Internal;
 using Microsoft.Data.SqlClient;
-using StockPortfolio.Api.Models;
 using StockPortfolio.Core.Interfaces;
-using StockPortfolio.Infrastructure.Data;
 
 namespace StockPortfolio.Infrastructure.Repository
 {

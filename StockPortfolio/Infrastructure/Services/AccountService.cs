@@ -21,7 +21,7 @@ namespace StockPortfolio.Infrastructure.Services
             _accountRepository = accountRepository;
             _configuration = configuration;
         }
-        public async Task<LoginResponse> Login(LoginModel model)
+        public async Task<LoginResponse> Login(LoginViewModel model)
         {
             var user = await _accountRepository.FindUser(model.Username);
             if (user != null && await _accountRepository.CheckPassword(user, model.Password))
@@ -51,7 +51,7 @@ namespace StockPortfolio.Infrastructure.Services
             return null;
         }
 
-        public async Task<IdentityResult> Register(RegisterModel model)
+        public async Task<IdentityResult> Register(RegisterViewModel model)
         {
             var userExists = await _accountRepository.FindUser(model.Username);
             if (userExists != null)
@@ -74,7 +74,7 @@ namespace StockPortfolio.Infrastructure.Services
             return result;
         }
 
-        public async Task<IdentityResult> RegisterAdmin(RegisterModel model)
+        public async Task<IdentityResult> RegisterAdmin(RegisterViewModel model)
         {
             var userExists = await _accountRepository.FindUser(model.Username);
             if (userExists != null)

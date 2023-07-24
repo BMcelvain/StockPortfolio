@@ -1,15 +1,13 @@
-﻿using StockPortfolio.Core.Enums;
-
-namespace StockPortfolio.Core.Models
+﻿namespace StockPortfolio.Core.Models
 {
     public class Transaction
     {
-        public Guid id { get; set; }
-        public Guid portfolioID { get; set; }
-        public DateTime transactionDate { get; set; }
-        public TransactionType.Type transactionType { get; set; }
-        public string stockSymbol { get; set; }
-        public decimal shares { get; set; }
-        public decimal price { get; set; }
+        public Guid TransactionId { get; set; }
+        public Guid PortfolioID { get; set; }
+        public DateTime TransactionDate { get; set; }
+        public string TransactionType { get; set; }
+        public string StockSymbol { get; set; }
+        public decimal Shares { get; set; }
+        public decimal Price { get; set; }
     }
 }

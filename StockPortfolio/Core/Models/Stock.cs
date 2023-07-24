@@ -4,12 +4,12 @@ namespace StockPortfolio.Core.Models
 {
     public class Stock
     {
-        public string stockSymbol { get; set; }
-        public DateTime updateDate { get; set; }
-        public decimal openPrice { get; set; }
-        public decimal highPrice { get; set; }
-        public decimal lowPrice { get; set; }
-        public decimal closePrice { get; set; }
-        public int volume { get; set; }
+        public string StockSymbol { get; set; }
+        public DateTime UpdateDate { get; set; }
+        public decimal OpenPrice { get; set; }
+        public decimal HighPrice { get; set; }
+        public decimal LowPrice { get; set; }
+        public decimal ClosePrice { get; set; }
+        public int Volume { get; set; }
     }
 }

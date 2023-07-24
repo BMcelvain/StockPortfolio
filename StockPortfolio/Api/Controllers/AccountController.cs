@@ -4,21 +4,26 @@ using StockPortfolio.Api.Models;
 using StockPortfolio.Core.Interfaces;
 using StockPortfolio.Infrastructure.Services;
 
-namespace StockPortfolio.Api
+namespace StockPortfolio.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AccountController : ControllerBase
+    public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
 
         public AccountController(IAccountService accountService)
         {
             _accountService = accountService;
+        } 
+
+        public IActionResult Index()
+        {
+            return View();
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        public async Task<IActionResult> Login([FromBody] LoginViewModel model)
         {
             var result = await _accountService.Login(model);
 
@@ -31,7 +36,7 @@ namespace StockPortfolio.Api
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
         {
             var result = await _accountService.Register(model);
 
@@ -48,7 +53,7 @@ namespace StockPortfolio.Api
         }
 
         [HttpPost("register-admin")]
-        public async Task<IActionResult> RegisterAdmin([FromBody] RegisterModel model)
+        public async Task<IActionResult> RegisterAdmin([FromBody] RegisterViewModel model)
         {
             var result = await _accountService.RegisterAdmin(model);
             if (result.Succeeded)

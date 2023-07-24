@@ -6,8 +6,8 @@ namespace StockPortfolio.Core.Interfaces
 {
     public interface IAccountService
     {
-        Task<LoginResponse> Login(LoginModel model);
-        Task<IdentityResult> Register(RegisterModel model);
-        Task<IdentityResult> RegisterAdmin(RegisterModel model);
+        Task<LoginResponse> Login(LoginViewModel model);
+        Task<IdentityResult> Register(RegisterViewModel model);
+        Task<IdentityResult> RegisterAdmin(RegisterViewModel model);
     }
 }

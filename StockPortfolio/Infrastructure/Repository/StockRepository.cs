@@ -1,13 +1,23 @@
 ﻿using StockPortfolio.Core.Interfaces;
 using StockPortfolio.Core.Models;
+using StockPortfolio.Infrastructure.Data;
 
 namespace StockPortfolio.Infrastructure.Repository
 {
-    public class StockRepository : IStockRepositroy
+    public class StockRepository : IStockRepository
     {
-        Task IStockRepositroy.CreateStock(Stock stock)
+        private readonly ApplicationDbContext _dbContext; 
+
+        public StockRepository(ApplicationDbContext context)
         {
-            throw new NotImplementedException();
+            _dbContext = context;
+        }
+        public async Task<Stock> CreateStock(Stock stock)
+        {
+            _dbContext.Stocks.Add(stock);
+            await _dbContext.SaveChangesAsync();
+
+            return stock;
         }
     }
 }

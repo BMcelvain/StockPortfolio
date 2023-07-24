@@ -1,28 +1,70 @@
-﻿using StockPortfolio.Core.Interfaces;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using StockPortfolio.Core.Interfaces;
 using StockPortfolio.Core.Models;
+using StockPortfolio.Infrastructure.Data;
 
 namespace StockPortfolio.Infrastructure.Repository
 {
     public class PortfolioRepository : IPortfolioRepository
     {
-        Task IPortfolioRepository.CreatePortfolio(Portfolio portfolio)
+        private readonly ApplicationDbContext _dbContext;
+
+        public PortfolioRepository(ApplicationDbContext dbContext)
         {
-            throw new NotImplementedException();
+            _dbContext = dbContext;  
+        }
+        public async Task<Portfolio> CreatePortfolio(Portfolio portfolio)
+        {
+            _dbContext.Portfolios.Add(portfolio);
+            await _dbContext.SaveChangesAsync();
+
+            return portfolio;
         }
 
-        Task IPortfolioRepository.DeletePortfolio(Guid portfolioId)
+        public async Task<Portfolio> DeletePortfolio(Portfolio portfolio)
         {
-            throw new NotImplementedException();
+            _dbContext.Portfolios.Remove(portfolio);
+            await _dbContext.SaveChangesAsync();
+
+            return portfolio;
         }
 
-        Task<IEnumerable<Portfolio>> IPortfolioRepository.GetPortfoliosByUserId(Guid userId)
-        {
-            throw new NotImplementedException();
+        public async Task<Portfolio> GetPortfolio(Guid portfolioId)
+        { 
+            var result = await _dbContext.Portfolios
+                                .Where(p => p.PortfolioId == portfolioId)
+                                .FirstOrDefaultAsync();
+
+            return result;
         }
 
-        Task IPortfolioRepository.UpdatePortfolio(Guid portfolioId)
+        public async Task<List<Portfolio>> GetPortfolioList(string userId)
         {
-            throw new NotImplementedException();
+            var result = await _dbContext.Portfolios
+                                .Where(p => p.UserId == userId)
+                                .ToListAsync();
+
+            return result;
+        }
+
+        public async Task<Portfolio> UpdatePortfolio(Portfolio portfolio)
+        {
+            var existingPortfolio = await _dbContext.Portfolios
+                                            .Where(p => p.PortfolioId == portfolio.PortfolioId)
+                                            .FirstOrDefaultAsync();
+
+            if (existingPortfolio == null)
+            {
+                return null;
+            }
+
+            existingPortfolio.PortfolioName = portfolio.PortfolioName;
+            existingPortfolio.Balance = portfolio.Balance;
+            await _dbContext.SaveChangesAsync();
+
+            return portfolio;
         }
     }
 }

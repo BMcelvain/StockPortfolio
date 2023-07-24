@@ -4,9 +4,9 @@ namespace StockPortfolio.Core.Models
 {
     public class Portfolio
     {
-        public Guid id { get; set; }
-        public Guid userID { get; set; }
-        public string portfolioName { get; set; }
-        public decimal balance { get; set; }
+        public Guid PortfolioId { get; set; }
+        public string UserId { get; set; }
+        public string PortfolioName { get; set; }
+        public decimal Balance { get; set; }
     }
 }
