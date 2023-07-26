@@ -6,8 +6,6 @@ using StockPortfolio.Infrastructure.Services;
 
 namespace StockPortfolio.Api.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
@@ -15,57 +13,82 @@ namespace StockPortfolio.Api.Controllers
         public AccountController(IAccountService accountService)
         {
             _accountService = accountService;
-        } 
+        }
 
-        public IActionResult Index()
+        [HttpGet("login")]
+        public IActionResult Login()
         {
             return View();
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginViewModel model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
-            var result = await _accountService.Login(model);
-
-            if (result == null)
+            if (ModelState.IsValid)
             {
-                return Unauthorized();
+                var result = await _accountService.Login(model);
+
+                if (result != null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt. Please try again.");
+                }
             }
 
-            return Ok(result);
+            return View(model);
+        }
+
+        [HttpGet("register")]
+        public IActionResult Register()
+        {
+            return View();
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            var result = await _accountService.Register(model);
-
-            if (result.Succeeded)
+            if (ModelState.IsValid)
             {
-                return Ok(new Response { Status = "Success", Message = "User created successfully!" });
-            }
-            else if (result.Errors.Any())
-            {
-                return BadRequest(new Response { Status = "Error", Message = result.Errors.First().Description });
+                var result = await _accountService.Register(model);
+
+                if(result.Errors == null)
+                {
+                    RedirectToAction("Login", "Account");                
+                }
+                
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
             }
 
-            return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+            return View(model);
         }
 
         [HttpPost("register-admin")]
         public async Task<IActionResult> RegisterAdmin([FromBody] RegisterViewModel model)
         {
-            var result = await _accountService.RegisterAdmin(model);
-            if (result.Succeeded)
+            if (ModelState.IsValid)
             {
-                return Ok(new Response { Status = "Success", Message = "User created successfully!" });
-            }
-            else if (result.Errors.Any())
-            {
-                return BadRequest(new Response { Status = "Error", Message = result.Errors.First().Description });
+                var result = await _accountService.Register(model);
+
+                if (result.Errors == null)
+                {
+                    RedirectToAction("Login", "Account");
+                }
+
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
             }
 
-            return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+            return View(model);
         }
     }
 }

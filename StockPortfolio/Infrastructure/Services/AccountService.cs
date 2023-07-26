@@ -32,6 +32,7 @@ namespace StockPortfolio.Infrastructure.Services
                 {
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.UniqueName, user.Email)
                 };
 
                 foreach (var userRole in userRoles)
@@ -124,7 +125,7 @@ namespace StockPortfolio.Infrastructure.Services
             var token = new JwtSecurityToken(
                 issuer: _configuration["JwtSettings:ValidIssuer"],
                 audience: _configuration["JwtSettings:ValidAudience"],
-                expires: DateTime.Now.AddHours(3),
+                expires: DateTime.Now.AddMinutes(30),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                 );

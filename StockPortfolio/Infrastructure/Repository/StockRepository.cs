@@ -1,4 +1,5 @@
-﻿using StockPortfolio.Core.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using StockPortfolio.Core.Interfaces;
 using StockPortfolio.Core.Models;
 using StockPortfolio.Infrastructure.Data;
 
@@ -18,6 +19,23 @@ namespace StockPortfolio.Infrastructure.Repository
             await _dbContext.SaveChangesAsync();
 
             return stock;
+        }
+
+        public async Task<Dictionary<string, decimal[]>> GetCurrentStockPrices(DateTime date)
+        {
+            var formattedDate = date.ToString("yyyy-MM-dd");
+            var stockPricesOnDate = await _dbContext.Stocks
+                                .Where(s => s.UpdateDate == date)
+                                .Select(s => new Stock
+                                {
+                                    StockSymbol = s.StockSymbol,
+                                    ClosePrice = s.ClosePrice,
+                                    Volume = s.Volume   
+                                }).ToListAsync();
+
+            var result = stockPricesOnDate.ToDictionary(s => s.StockSymbol, s => new decimal[] { s.ClosePrice, s.Volume });
+
+            return result;
         }
     }
 }

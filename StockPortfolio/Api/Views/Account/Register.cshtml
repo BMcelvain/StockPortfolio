@@ -1,15 +1,13 @@
-﻿@model LoginViewModel;
+﻿@model RegisterViewModel
+@{
+    ViewBag.Title = "Register";
+}
 
 @section Scripts{
     <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
 }
 
-<!DOCTYPE html>
-<html>
-<head>
-</head>
-<body>
 <div class="row">
     <div class="col-md-4 offset-4">
         <form method="post">
@@ -22,13 +20,18 @@
                 <label asp-for="Password">Password</label>
                 <input asp-for="Password" type="password" class="form-control" placeholder="Password">
                 <span asp-validation-for="Password" class="text-warning"></span>
+            </div> 
+            <div class="form-group">
+                <label asp-for="Email">Email</label>
+                <input asp-for="Email" type="text" class="form-control" placeholder="Email">
+                <span asp-validation-for="Email" class="text-warning"></span>
             </div>
             <br />
             <div class="form-group row-cols-1">
-                <button type="submit" class="btn btn-primary">Login</button>
+                <button type="submit" class="btn btn-primary">Register</button>
             </div>
+            <br />
+
         </form>
     </div>
 </div>
-</body>
-</html>

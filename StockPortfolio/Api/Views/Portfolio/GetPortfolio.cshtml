@@ -1,0 +1,76 @@
+﻿@using StockPortfolio.Api.ViewModels
+@model IndividualPortfolioViewModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .custom-btn {
+            width: 225px; 
+            height: 35px; 
+        }
+    </style>
+</head>
+<body>
+    <div class="portfolio-name">
+        <h1>@Model.PortfolioName</h1>
+    </div>
+    <br />
+    <div class="balance">Balance: $@Model.Balance</div>
+
+    <!-- TO-DO: Add a date box -->
+
+    <div class="row">
+        <div class="col-9">
+            <div class="table-bordered">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Stock Symbol:</th>
+                            <th>Shares</th>
+                            <th>Cost Per Share</th>
+                            <th>Current Price</th>
+                            <th>Gain/Loss</th>
+                            <th>Volume</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var stock in @Model.StockData)
+                        {
+                            <tr>
+                                <td>
+                                    <form asp-action="">
+                                        <button type="submit" class="btn btn-link">@stock.Key</button>
+                                    </form>
+                                </td>
+                                <td>@stock.Value[0]</td>     @*Shares*@
+                                <td>@stock.Value[1]</td>     @*Cost per share*@
+                                <td>@stock.Value[2]</td>     @*Current price*@
+                                <td>@stock.Value[4]%</td>    @*Gain/Loss*@
+                                <td>@stock.Value[3]</td>     @*Current volume*@
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="d-flex flex-column">
+                <form asp-action="UpdatePortfolioForm" asp-controller="Portfolio" method="post">
+                    <input type="hidden" name="PortfolioName" value="@Model.PortfolioName">
+                    <input type="hidden" name="Balance" value="@Model.Balance">
+                    <input type="hidden" name="PortfolioId" value="@Model.PortfolioId" />
+                    <button id="editPortfolio" class="btn-outline-secondary mb-2 custom-btn">Edit Portfolio</button>
+                </form>
+            </div>
+            <div>
+                <form asp-action="GetTransactionsByPortfolioId" asp-controller="Transaction" method="post">
+                    <input type="hidden" name="PortfolioId"value="@Model.PortfolioId" />
+                    <button type="submit" class="btn-outline-secondary mb-2 custom-btn">Transaction History</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

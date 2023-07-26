@@ -1,0 +1,42 @@
+﻿@using StockPortfolio.Core.Models;
+@model Portfolio;
+
+@section Scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .custom-btn {
+            width: 225px;
+            height: 35px;
+        }
+    </style>
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-4 offset-4">
+            <form asp-action="CreatePortfolio" asp-controller="Portfolio" method="post">
+                <div class="form-group">
+                    <input type="hidden" name="PortfolioId" value="@Model.PortfolioId">
+                    <label asp-for="PortfolioName">PortfolioName</label>
+                    <input asp-for="PortfolioName" type="text" class="form-control" placeholder="Portfolio Name">
+                    <span asp-validation-for="PortfolioName" class="text-warning"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Balance">Balance</label>
+                    <input asp-for="Balance" type="number" class="form-control" placeholder="0">
+                    <span asp-validation-for="Balance" class="text-warning"></span>
+                </div>
+                <br />
+                <div class="form-group row-cols-1">
+                    <button type="submit" class="btn btn-primary">Submit Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -24,7 +24,7 @@ namespace StockPortfolio.Infrastructure.Repository
         public async Task<IEnumerable<Transaction>> GetTransactionsByPorfolioId(Guid portfolioId)
         {
             var result = await _dbContext.Transactions
-                .Where(t => t.PortfolioID == portfolioId)
+                .Where(t => t.PortfolioId == portfolioId)
                 .ToListAsync();
 
             return result;

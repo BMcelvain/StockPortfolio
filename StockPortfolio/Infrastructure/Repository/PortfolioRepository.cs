@@ -23,19 +23,40 @@ namespace StockPortfolio.Infrastructure.Repository
             return portfolio;
         }
 
-        public async Task<Portfolio> DeletePortfolio(Portfolio portfolio)
+        public async Task<bool> DeletePortfolio(Portfolio portfolio)
         {
-            _dbContext.Portfolios.Remove(portfolio);
-            await _dbContext.SaveChangesAsync();
+            try
+            {
+                _dbContext.Portfolios.Remove(portfolio);
+                await _dbContext.SaveChangesAsync();
 
-            return portfolio;
+                return true;
+            }
+            catch (DbUpdateException ex)
+            {
+                return false;
+            }
+            
         }
 
-        public async Task<Portfolio> GetPortfolio(Guid portfolioId)
-        { 
-            var result = await _dbContext.Portfolios
-                                .Where(p => p.PortfolioId == portfolioId)
-                                .FirstOrDefaultAsync();
+        public async Task<List<TransactionsWithStockDataModel>> GetPortfolio(Guid portfolioId)
+        {
+            var result = await (from t in _dbContext.Transactions
+                                join s in _dbContext.Stocks
+                                on new { Symbol = t.StockSymbol, Date = t.TransactionDate }
+                                equals new { Symbol = s.StockSymbol, Date = s.UpdateDate }
+                                where t.PortfolioId == portfolioId
+                                select new TransactionsWithStockDataModel
+                                {
+                                    TransactionDate = t.TransactionDate,
+                                    TransactionType = t.TransactionType,
+                                    StockSymbol = t.StockSymbol,
+                                    Shares = t.Shares,
+                                    Price = t.Price,
+                                    ClosePrice = s.ClosePrice,
+                                    PercentChange = ((s.ClosePrice - s.OpenPrice)/ s.OpenPrice) * 100,
+                                    Volume = s.Volume
+                                }).ToListAsync();
 
             return result;
         }
@@ -65,6 +86,15 @@ namespace StockPortfolio.Infrastructure.Repository
             await _dbContext.SaveChangesAsync();
 
             return portfolio;
+        }
+
+        public async Task<Portfolio> GetPortfolioById(Guid portfolioId)
+        {
+            var result = await _dbContext.Portfolios
+                                .Where(p => p.PortfolioId == portfolioId)
+                                .FirstOrDefaultAsync();
+
+            return result;
         }
     }
 }

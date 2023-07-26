@@ -5,13 +5,11 @@ using StockPortfolio.Core.Models;
 
 namespace StockPortfolio.Api.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class TransactionsController : ControllerBase
+    public class TransactionController : Controller
     {
         private readonly ITransactionService _transactionService;
 
-        public TransactionsController(ITransactionService transactionService)
+        public TransactionController(ITransactionService transactionService)
         {
             _transactionService = transactionService;
         }
@@ -36,24 +34,17 @@ namespace StockPortfolio.Api.Controllers
             }
         }
 
-        [HttpGet("{portfolioId}")]
-        public async Task<IActionResult> GetTransactionsByPorfolioId(Guid portfolioId)
+        [HttpPost]
+        public async Task<ActionResult<List<Transaction>>> GetTransactionsByPortfolioId(Guid portfolioId)
         {
-            try
-            {
-                var result = await _transactionService.GetTransactionsByPorfolioId(portfolioId);
+            var result = await _transactionService.GetTransactionsByPorfolioId(portfolioId);
 
-                if (result == null)
-                {
-                    return NotFound(new Response { Status = "Error", Message = "Transactions not found!" });
-                }
-
-                return Ok(result);
-            }
-            catch (Exception ex)
+            if (result == null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = ex.Message });
+                return View(new Response { Status = "Error", Message = "Transactions not found!" });
             }
+
+            return View(result);
         }
     }
 }
